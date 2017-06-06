@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include partials/head.ejs%>
+
+<body>
+<% include partials/nav.ejs %>
+
+<div class="container list-action-container">
+    <div class="row">
+        <div class="card-large center">
+            <nav class="navbar ">
+                <ul class="nav navbar-nav list-action-1">
+                    <li><p class="nav-desc"><strong>LEDGER</strong></p></li>
+                    <li><p class="nav-desc">Here You will see all transaction history</p></li>
+                </ul>
+            </nav>
+            <div class="container">
+                <form class="form-inline form-ledger">
+                    <div class="form-group">
+                        <label for="all">ALL</label>
+                        <input type="radio" class="form-control" id="all" name="choice">
+                    </div>
+                    <div class="form-group">
+                        <label for="buy">BUY</label>
+                        <input type="radio" class="form-control" id="buy" name="choice">
+                    </div>
+                    <div class="form-group">
+                        <label for="regrade">REGRADE</label>
+                        <input type="radio" class="form-control" id="regrade" name="choice">
+                    </div>
+                    <div class="form-group">
+                        <label for="sell">SELL</label>
+                        <input type="radio" class="form-control" id="sell" name="choice">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control">
+                            <option>
+                                Past Week
+                            </option>
+                            <option>
+                                Past Day
+                            </option>
+                            <option>
+                                Past Month
+                            </option>
+                            <option>
+                                Past Year
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-default">GET</button>
+                </form>
+                <div class="list">
+                    <table class="table table-inverse">
+                        <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                            <th>Item</th>
+                            <th>Certification Number</th>
+                            <th><span class="text-success">+</span>/<span class="text-danger">-</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="light-blue">
+                            <td>1</td>
+                            <td>May 2, 2017</td>
+                            <td>BUY</td>
+                            <td>Bitcoins</td>
+                            <td>13-69755-5254</td>
+                            <td class="text-danger">$6</td>
+                        </tr>
+                        <tr >
+                            <td>1</td>
+                            <td>May 5, 2017</td>
+                            <td>BUY</td>
+                            <td>Bitcoins</td>
+                            <td>13-69755-5254</td>
+                            <td class="text-success">$256</td>
+                        </tr>
+                        <tr class="light-blue">
+                            <td>1</td>
+                            <td>May 8, 2017</td>
+                            <td>SELL</td>
+                            <td>Bitcoins</td>
+                            <td>13-69755-5254</td>
+                            <td class="text-danger">$27</td>
+                        </tr>
+                        <tr >
+                            <td>1</td>
+                            <td>May 12, 2017</td>
+                            <td>BUY</td>
+                            <td>Bitcoins</td>
+                            <td>13-69755-5254</td>
+                            <td class="text-success">$556</td>
+                        </tr>
+                        <tr class="light-blue">
+                            <td>1</td>
+                            <td>May 22, 2017</td>
+                            <td>SELL</td>
+                            <td>Bitcoins</td>
+                            <td>13-69755-5254</td>
+                            <td class="text-success">$26</td>
+                        </tr>
+                        <tr >
+                            <td>1</td>
+                            <td>May 24, 2017</td>
+                            <td>BUY</td>
+                            <td>Bitcoins</td>
+                            <td>13-61255-5254</td>
+                            <td class="text-success">$14</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partials/scripts.ejs %>
+
+</body>
+</html>

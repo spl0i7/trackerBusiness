@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+body {
+    background: rgb(232,244,255);
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Material Layouts*/
+
+.card-large {
+    margin-top: 50px;
+    border-radius: 4px;
+    /*padding: 10px 20px;*/
+    width: 100%;
+    min-width: 400px;
+
+    background: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.card {
+    margin:0 auto;
+    margin-top: 50px;
+    border-radius: 4px;
+    padding: 10px 20px;
+    width: 500px;
+    background: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+    border-color: #24222F;
+    padding:10px;
+    background: #383548;
+    border-radius: 0;
+}
+.nav .active a {
+    background:#383548 !important;
+    border-bottom: 2px solid  #03A9F4;
+    color:#03A9F4 !important;
+    padding-bottom: 5px;
+}
+.nav li a{
+    font-size: 1.4em;
+    color: #fff !important;
+}
+.nav li {
+    margin-right: 15px;
+}
+nav  {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.navbar-header {
+    margin-right: auto;
+}
+
+.navbar-collapse {
+    text-align: center;
+}
+
+.navbar-utils, .navbar-main {
+    flex-shrink: 0;
+}
+.navbar-utils {
+    margin-left: auto;
+}
+.nav li a:hover, .nav li a span:hover{
+    transition-duration: 0.4s;
+    color:#03A9F4 !important;
+}
+.navbar-header a {
+    color: white !important;
+    font-weight: bold;
+}
+
+.nav-desc {
+    color: #ffffff;
+    margin-top:15px;
+
+}
+.nav-desc span {
+    margin-right: 5px;
+}
+
+.dropdown-menu {
+    background: #383548;
+}
+
+/* Buttons */
+
+.btn-login,.btn-login:hover{
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+    color:#fff;
+}
+.btn-login {
+    transition-duration: 0.4s;
+    background: #64DD17;
+}
+.btn-login:hover {
+    background: #558B2F;
+}
+.btn-medium {
+    font-size: 1.2em;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+/* Misc */
+
+#loading {
+    width:64px;
+    height:64px;
+    display: none;
+}
+.line  {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(0,0,0,0.2);
+}
+
+.center {
+    margin: 0 auto;
+}
+
+.center-text {
+    text-align: center;
+}
+
+
+/* Forms */
+label {
+    color: rgba(0,0,0,0.4);
+}
+
+form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-ledger {
+    display: flex;
+    justify-content: space-between;
+}
+.form-ledger input{
+    margin-top:-5px;
+    margin-left:10px;
+}
+
+/*Glyphs*/
+
+.glyphicon {
+    font-size: 1.1em;
+    color: #ffffff;
+}
+
+/* profile */
+.profile-main {
+    background: #24222F;
+    margin-top:-20px;
+}
+.profile-picture {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+
+}
+.profile-container {
+    color: #ffffff;
+}
+.profile-name {
+    color:#03A9F4;
+}
+
+/* Table */
+
+.light-blue {
+background: rgb(232,244,255);
+}
+.not-selected {
+    color: rgba(0,0,0,0.4);
+    font-weight: bold;
+}
+
+.selected {
+    color: #76FF03;
+    font-weight: bold;
+}
+
+/* list */
+
+.list-action-1 {
+    margin-left: 5px;
+    margin-right: auto;
+    display: inline-block;
+
+}
+
+.list-action-2 {
+    margin-right: 5px;
+    margin-left: auto;
+    display: inline-block;
+}
+
+.list-action-1 li a:hover,.list-action-2 li a:hover {
+    background: rgb(49, 48, 53) !important;
+}
+
+.list-action-1 li a, .list-action-2 li a  {
+    font-size: 1.0em;
+}
+
+.list-action-1 li a span, .list-action-2 li a span {
+    margin-right: 5px;
+}
+
