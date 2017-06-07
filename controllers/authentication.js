@@ -11,7 +11,7 @@ userController.home = function(req, res) {
 // Go to registration page
 userController.register = function(req, res) {
     if(req.isAuthenticated())
-        return res.render('success');
+        return res.redirect('/');
     else
         return res.render('signup');
 };
@@ -20,8 +20,10 @@ userController.register = function(req, res) {
 userController.doRegister = function(req, res) {
 
     User.register(new User({
-            email : req.body.email,
-            username : req.body.username
+            email : req.sanitize(req.body.email),
+            username : req.sanitize(req.body.username),
+            firstname: req.sanitize(req.body.firstname),
+            lastname : req.sanitize(req.body.lastname)
     }), req.body.password, function(err, user) {
         if (err) {
             console.log(err);
@@ -29,7 +31,7 @@ userController.doRegister = function(req, res) {
         }
         passport.authenticate('local')(req, res, function () {
             // res.redirect('/');
-            return res.render('success', {user:JSON.stringify(req.user)});
+            return res.redirect('/');
         });
     });
 };
@@ -37,7 +39,7 @@ userController.doRegister = function(req, res) {
 // Go to login page
 userController.login = function(req, res) {
     if(req.isAuthenticated())
-        return res.render('success', {user:JSON.stringify(req.user)});
+        return res.redirect('/');
     else
         return res.render('login', {status:true});
 };

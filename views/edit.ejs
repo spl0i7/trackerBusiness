@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<% include partials/head.ejs%>
+
+<body>
+<% include partials/nav.ejs %>
+
+<div class="container list-action-container">
+    <div class="row">
+        <div class="card-large center">
+            <nav class="navbar ">
+                <ul class="nav navbar-nav list-action-1">
+                    <li><p class="nav-desc"><span class="glyphicon glyphicon-plus"></span>Add</p></li>
+                    <li><p class="nav-desc">Here You will add new item to your inventory</p></li>
+                </ul>
+            </nav>
+            <div class="container">
+                <form>
+                    <div class="form-group">
+                        <label for="grader">Grader</label>
+                        <select id="grader"  class="form-control">
+                            <option>PCGS</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="certification">Certification</label>
+                        <input type="text" class="form-control" id="certification" placeholder="Certification" name="certification" />
+                    </div>
+                    <div class="form-group">
+                        <img src="/img/loading.gif" id="loading"/>
+                        <button type="button" class="btn btn-info" id="getdata">GET DATA</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="number" id="year" class="form-control" name="year"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="denomination">Denomination</label>
+                        <input type="text" id="denomination" class="form-control" name="denomination"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="grade">Grade</label>
+                        <input type="text" id="grade" class="form-control" name="grade"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseprice">Purchase Price (USD)</label>
+                        <input type="number" id="purchaseprice" class="form-control" name="purchaseprice">
+                    </div>
+                    <div class="form-group">
+                        <label for="comments">Comments</label>
+                        <input type="text" id="comments" class="form-control" name="comments">
+                    </div>
+                    <button type="button" id="editbutton" class="btn btn-success btn-lg">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partials/scripts.ejs %>
+<script>
+    function scrapDataPCGS(html){
+        let coinInfo = {};
+        $(html).find("table tbody tr td").each(function(i, v){
+            if(i == 9) coinInfo.grade = $(this).text().replace(/\n|\r|\s/g,"");
+            if(i == 3) coinInfo.year = $(this).text().replace(/\n|\r|\s/g,"");
+            if(i == 5) coinInfo.denomination = $(this).text().replace(/\n|\r|\s/g,"");
+            if(i == 17) coinInfo.price = $(this).text().replace(/\n|\r|\s|\$/g,"");
+        })
+        return coinInfo;
+    }
+
+
+    function updateForm(coinInfo) {
+        $('#purchaseprice').val(coinInfo.price);
+        $('#grade').val (coinInfo.grade);
+        $('#year').val (coinInfo.year);
+        $('#denomination').val (coinInfo.denomination);
+    }
+
+
+    $(document).ready(function () {
+        //restore form values
+        $('#certification').val('<%= coin.certification %>')
+        $('#purchaseprice').val('<%= coin.price %>');
+        $('#grade').val ('<%= coin.grade %>');
+        $('#year').val ('<%= coin.year %>');
+        $('#denomination').val ('<%= coin.denomination %>');
+        $('#comments').val ('<%= coin.comments %>');
+
+        $('#editbutton').click(function () {
+            $.ajax({
+                type: "PUT",
+                url: "/list/edit/" + "<%= coin._id %>",
+                data: $('form').serialize(),
+                success: function(data) {
+                    if(data.success) location.href = "/list";
+                }
+            });
+        })
+
+        $('#grader').change(function () {
+            switch ($(this).val()) {
+                case "PCGS" :
+                    $('#getdata').show();
+                    break;
+                default :
+                    $('#getdata').hide();
+                    break;
+            }
+        });
+
+        $('#getdata').click(function () {
+            $('#getdata').hide();
+            $('#loading').show();
+            let baseurl = '';
+
+            switch ($('#grader').val()) {
+                case "PCGS" :
+                    baseurl = 'http://www.pcgs.com/cert/';
+                    break;
+                default :
+                    break;
+            }
+            $.ajax({
+                url: baseurl + $('#certification').val(),
+                type: "get",
+                dataType: "",
+                success: function(data) {
+                    $('#getdata').show();
+                    $('#loading').hide();
+                    updateForm(scrapDataPCGS(data));
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

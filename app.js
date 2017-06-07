@@ -8,6 +8,8 @@ let session = require('express-session');
 let passport = require('passport');
 let mongoose = require('mongoose');
 let LocalStrategy = require('passport-local').Strategy;
+let expressSanitizer = require('express-sanitizer');
+
 
 // load up the user model
 let User = require('./models/User');
@@ -62,6 +64,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSanitizer());
 
 app.use('/', index);
 app.use('/', users);

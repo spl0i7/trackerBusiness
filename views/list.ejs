@@ -10,9 +10,7 @@
                 <img src="img/profile.png" class="profile-picture"/>
             </div>
             <div class="col-md-6">
-                <h3 class="profile-name">James Miller</h3>
-                <h4>White House, Ring Rd, Adarsh Nagar,</h4>
-                <h4>Kalyanpur (East), Lucknow, Uttar Pradesh 226022</h4>
+                <h3 class="profile-name"><%= firstname %> - <%= lastname %></h3>
             </div>
             <div class="col-md-2">
                 <button class="btn btn-success btn-medium">LEDGER</button>
@@ -25,11 +23,11 @@
         <div class="card-large center">
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-1">
-                    <li><a href="/add_new"><span class="glyphicon glyphicon-plus"></span>Add</a> </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-send"></span>Move</a> </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
-                    <li><a class="text-dull" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
-                    <li><a class="text-dull" href="#"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
+                    <li><a href="/add_new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Add</a> </li>
+                    <li><a href="#" class="btn btn-info"><span class="glyphicon glyphicon-send"></span>Move</a> </li>
+                    <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
+                    <li><a class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
+                    <li><a id="editbutton" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
                 </ul>
 
                 <ul class="nav navbar-nav list-action-2">
@@ -49,11 +47,15 @@
                     </thead>
                     <tbody>
                     <% for (let i = 0 ; i < inventory.length; ++i ) {%>
+                    <% if (i % 2 == 0) { %>
                     <tr>
-                        <th scope="row"><input type="checkbox"/> </th>
+                    <% } else { %>
+                    <tr class="light-blue" >
+                    <% } %>
+                        <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
                         <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
                         <td><%= inventory[i].certification%></td>
-                        <td><%= inventory[i].price%></td>
+                        <td>$ <%= inventory[i].price%></td>
                     </tr>
                     <% }%>
                     </tbody>
@@ -68,7 +70,40 @@
         </div>
     </div>
 </div>
-
 <% include partials/scripts.ejs %>
+<script>
+    $(document).ready(function () {
+        $('#editbutton').click(function () {
+            let selectedCoin;
+            $("[type=checkbox]:checked").each ( function() {
+                selectedCoin = $(this).attr("name");
+            });
+            if(selectedCoin) {
+                window.location.href = "/list/edit/" + selectedCoin;
+            }
+
+        })
+        $('#removebutton').click(function () {
+            let selectedCoins = [];
+            $("[type=checkbox]:checked").each ( function() {
+                selectedCoins.push($(this).attr("name"));
+            });
+            if(selectedCoins.length > 0) {
+                $.ajax({
+                    url: '/list',
+                    type: 'DELETE',
+                    data: {
+                        coins: selectedCoins
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

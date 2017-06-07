@@ -9,6 +9,8 @@ let userSchema = mongoose.Schema(
                 email        : String,
                 hash         : String,
                 salt         : String,
+                firstname    : String,
+                lastname     : String,
                 inventory    : [{
                         year            : Number,
                         certification   : String,
