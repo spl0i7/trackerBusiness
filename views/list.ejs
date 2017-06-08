@@ -10,11 +10,10 @@
                 <img src="img/profile.png" class="profile-picture"/>
             </div>
             <div class="col-md-6">
-                <h3 class="profile-name"><%= firstname %> - <%= lastname %></h3>
+                <h3 class="profile-name"><%= firstname %>  <%= lastname %> ( <%= username %> )</h3>
+                <h4> <%= email %></h4>
             </div>
-            <div class="col-md-2">
-                <button class="btn btn-success btn-medium">LEDGER</button>
-            </div>
+            <div class="col-md-offset-6"></div>
         </div>
     </div>
 </div>
@@ -23,11 +22,10 @@
         <div class="card-large center">
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-1">
-                    <li><a href="/add_new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Add</a> </li>
-                    <li><a href="#" class="btn btn-info"><span class="glyphicon glyphicon-send"></span>Move</a> </li>
+                    <li><a href="/list/add"  class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Add</a> </li>
                     <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
-                    <li><a class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
-                    <li><a id="editbutton" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
+                    <li><a id="sellbutton"   class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
+                    <li><a id="editbutton"   class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
                 </ul>
 
                 <ul class="nav navbar-nav list-action-2">
@@ -48,9 +46,9 @@
                     <tbody>
                     <% for (let i = 0 ; i < inventory.length; ++i ) {%>
                     <% if (i % 2 == 0) { %>
-                    <tr>
+                    <tr class="tr">
                     <% } else { %>
-                    <tr class="light-blue" >
+                    <tr class="light-blue tr" >
                     <% } %>
                         <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
                         <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
@@ -72,7 +70,39 @@
 </div>
 <% include partials/scripts.ejs %>
 <script>
+
+    function showButtons() {
+        if ( $("[type=checkbox]:checked").length > 0) {
+            $('#editbutton').show('slow');
+            $('#removebutton').show('slow');
+            $('#sellbutton').show('slow');
+        }
+        else {
+            $('#editbutton').hide('slow');
+            $('#removebutton').hide('slow');
+            $('#sellbutton').hide('slow');
+        }
+    }
+
     $(document).ready(function () {
+
+        $("[type=checkbox]").change(showButtons());
+
+        $('.tr').click(function (e) {
+            $(this).toggleClass('material-green');
+
+
+            if($(e.target).closest('input[type="checkbox"]').length == 0){
+                if ($(this).find('input').is(':checked')) {
+                    $(this).find('input').prop('checked', false);
+                }
+                else {
+                    $(this).find('input').prop('checked', true);
+                }
+            }
+            showButtons();
+        });
+
         $('#editbutton').click(function () {
             let selectedCoin;
             $("[type=checkbox]:checked").each ( function() {
@@ -90,7 +120,7 @@
             });
             if(selectedCoins.length > 0) {
                 $.ajax({
-                    url: '/list',
+                    url: '/list/remove',
                     type: 'DELETE',
                     data: {
                         coins: selectedCoins

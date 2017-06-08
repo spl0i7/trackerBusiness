@@ -4,6 +4,9 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+
+
+
 /* Material Layouts*/
 
 .card-large {
@@ -188,8 +191,16 @@ form {
 
 /* Table */
 
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 .light-blue {
-background: rgb(232,244,255);
+    background: rgb(232,244,255);
+}
+.material-green {
+    transition-duration: 0.4s;
+    background: #4CAF50;
 }
 .not-selected {
     color: rgba(0,0,0,0.4);
@@ -227,4 +238,24 @@ background: rgb(232,244,255);
 .list-action-1 li a span, .list-action-2 li a span {
     margin-right: 5px;
 }
+
+/* UI */
+
+
+input[type="checkbox"] {
+    transform:scale(2, 2);
+}
+#editbutton {
+    display: none;
+}
+#removebutton {
+    display: none;
+}
+#sellbutton {
+    display: none;
+}
+
+
+
+
 

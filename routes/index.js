@@ -3,10 +3,8 @@ let router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  if(req.isAuthenticated())
+    if(!req.isAuthenticated()) return res.redirect('/login');
     return res.redirect('/list');
-  else
-    return res.redirect('/login')
 });
 
 module.exports = router;

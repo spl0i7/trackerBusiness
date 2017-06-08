@@ -20,8 +20,6 @@ let users = require('./routes/users');
 let list = require('./routes/list');
 let ledger = require('./routes/ledger');
 let regrade = require('./routes/regrade');
-let actions = require('./routes/user_actions');
-
 
 
 let app = express();
@@ -32,6 +30,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/trackerbusiness')
     .then(()=>console.log('database connection successful'))
     .catch(err=>console.log(err));
+
+
+
 
 
 // view engine setup
@@ -66,9 +67,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSanitizer());
 
+
+
+//todo protected route middleware
+
+
 app.use('/', index);
 app.use('/', users);
-app.use('/', actions);
 app.use('/list', list);
 app.use('/regrade', regrade);
 app.use('/ledger', ledger);

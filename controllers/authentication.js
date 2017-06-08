@@ -30,7 +30,6 @@ userController.doRegister = function(req, res) {
             return res.render('error', {message:'error in signup', error:err});
         }
         passport.authenticate('local')(req, res, function () {
-            // res.redirect('/');
             return res.redirect('/');
         });
     });
