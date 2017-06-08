@@ -4,9 +4,10 @@ let actionController = {};
 
 
 actionController.addNew = function (req, res) {
-    if(req.isAuthenticated())
-        return res.render('add_new');
-    return res.redirect('/login')
+    if(!req.isAuthenticated())
+        return res.redirect('/login');
+    return res.render('add_new');
+
 }
 
 actionController.doAddNew = function (req, res) {
@@ -21,7 +22,7 @@ actionController.doAddNew = function (req, res) {
     }
     User.findByIdAndUpdate({_id : req.user._id}, {$push: {inventory: coinInfo}}, {safe: true, upsert: true})
         .then(done=> {
-            res.redirect('/add_new')
+            res.redirect('/list/add')
         })
         .catch(err=>console.log(err))
 }
@@ -67,7 +68,7 @@ actionController.doEditCoin = function (req, res) {
         'inventory.$.denomination' : coinInfo.denomination,
         'inventory.$.grade' : coinInfo.grade,
         'inventory.$.comments' : coinInfo.comments,
-    }})
+        }})
         .then(noAffected=> { return res.json({success:true}) })
         .catch(err => {
             console.log(err)
