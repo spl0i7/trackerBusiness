@@ -1,5 +1,4 @@
 let mongoose = require('mongoose');
-let bcrypt   = require('bcrypt');
 let passportLocalMongoose = require('passport-local-mongoose');
 
 // define the schema for our user model

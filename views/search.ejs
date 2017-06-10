@@ -21,35 +21,30 @@
     <div class="row">
         <div class="card-large center">
             <nav class="navbar ">
+
                 <ul class="nav navbar-nav list-action-1">
-                    <li><a href="/list/add"  class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Add</a> </li>
+                    <li><a>Search results for "<%= query %>"</a></li>
                     <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
                     <li><a id="sellbutton"   class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
                     <li><a id="editbutton"   class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
                 </ul>
 
                 <ul class="nav navbar-nav list-action-2">
-                    <li class="searchtools"><a><input id="searchbox" type="text" class="form-control input-sm" maxlength="64" placeholder="Search" /></a></li>
-                    <li class="searchtools"><a><button id="searchbutton" type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span></button></a></li>
-                    <li><a><span id="searchicon" class="glyphicon glyphicon-search"></span></a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="glyphicon glyphicon-sort"></span></a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a class="dropdown-navbar" href="/list/sort/price/asc">Price</a></li>
-                            <li><a class="dropdown-navbar" href="/list/sort/description/asc">Description</a></li>
-                            <li><a class="dropdown-navbar" href="/list/sort/certification/asc">Certification</a></li>
-                        </ul>
+                    <li class="searchtools">
+                        <a>
+                            <input id="searchbox" type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
+                        </a>
                     </li>
-                    <li><div class="item-perpage">
-                            <select class="selectpicker" data-width="65px">
-                                <option>25</option>
-                                <option>50</option>
-                                <option>100</option>
-                            </select>
-                        </div>
+                    <li class="searchtools">
+                        <a>
+                            <button id="searchbutton" type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span></button>
+                        </a>
                     </li>
-
+                    <li>
+                        <a>
+                            <span id="searchicon" class="glyphicon glyphicon-search"></span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div class="list">
@@ -66,9 +61,9 @@
                     <% for (let i = 0 ; i < inventory.length; ++i ) {%>
                     <% if (i % 2 == 0) { %>
                     <tr class="tr">
-                    <% } else { %>
+                        <% } else { %>
                     <tr class="light-blue tr" >
-                    <% } %>
+                        <% } %>
                         <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
                         <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
                         <td><%= inventory[i].certification%></td>
@@ -79,24 +74,12 @@
                 </table>
             </div>
             <nav class="navbar ">
-                <ul class="nav navbar-nav list-action-2">
-                    <% if(currentPage > 1 ) { %>
-                    <% let previousPage = url + '?page=' + (currentPage -1) %>
-                    <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
-                    <% } %>
-                    <% if (pageCount > 1 && currentPage != pageCount) { %>
-                    <% let nextPage = url + '?page=' + (currentPage +1)%>
-                    <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
-                    <% } %>
-                </ul>
             </nav>
         </div>
     </div>
 </div>
 <% include partials/scripts.ejs %>
 <script>
-
-
     function showButtons() {
         if ( $("[type=checkbox]:checked").length > 0) {
             $('#editbutton').show('slow');
@@ -109,33 +92,20 @@
             $('#sellbutton').hide('slow');
         }
     }
-
     $(document).ready(function () {
-        $('.searchtools').hide();
-        $('input[type=checkbox]').each( function() {
-            $(this).removeAttr('checked');
-        });
-
-
-        $('.selectpicker').change(function () {
-            console.log($(this).val());
-        })
-
         $('#searchbutton').click(function () {
             let searchQuery = $('#searchbox').val();
-            location.href = location.href + '/search/' + searchQuery;
+            location.href =  location.protocol + '//' + location.host + '/list/search/' +searchQuery;
         })
 
         $('#searchicon').click(function () {
-            $(this).hide();
+            $(this).hide('slow');
             $('.searchtools').show('slow');
         });
         $('[type=checkbox]').change(showButtons());
 
         $('.tr').click(function (e) {
             $(this).toggleClass('material-green');
-
-
             if($(e.target).closest('input[type="checkbox"]').length == 0){
                 if ($(this).find('input').is(':checked')) {
                     $(this).find('input').prop('checked', false);
@@ -146,7 +116,6 @@
             }
             showButtons();
         });
-
         $('#editbutton').click(function () {
             let selectedCoin;
             $("[type=checkbox]:checked").each ( function() {

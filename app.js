@@ -9,18 +9,38 @@ let passport = require('passport');
 let mongoose = require('mongoose');
 let LocalStrategy = require('passport-local').Strategy;
 let expressSanitizer = require('express-sanitizer');
+let  multer  = require('multer');
+let upload = multer({
+    dest: './public/img/profile' ,
+    fileFilter: function (req, file, cb) {
 
+        let filetypes = /jpeg|jpg/;
+        let mimetype = filetypes.test(file.mimetype);
+        let extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb("Error: File upload only supports the following filetypes - " + filetypes);
+    },
+    filename : function (req, file, cb) {
+        require('crypto').randomBytes( 24 , function(err, buffer) {
+            cb(null, buffer.toString('hex') + '-' + Date.now());
+        });
+
+    }
+});
 
 // load up the user model
 let User = require('./models/User');
 
 
 let index = require('./routes/index');
-let users = require('./routes/users');
+let users = require('./routes/authentication');
 let list = require('./routes/list');
 let ledger = require('./routes/ledger');
 let regrade = require('./routes/regrade');
-
+let profile = require('./routes/profile');
 
 let app = express();
 
@@ -74,6 +94,7 @@ app.use(expressSanitizer());
 
 app.use('/', index);
 app.use('/', users);
+app.use('/profile', profile);
 app.use('/list', list);
 app.use('/regrade', regrade);
 app.use('/ledger', ledger);

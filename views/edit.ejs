@@ -50,7 +50,7 @@
                         <label for="comments">Comments</label>
                         <input type="text" id="comments" class="form-control" name="comments">
                     </div>
-                    <button type="button" id="editbutton" class="btn btn-success btn-lg">Save</button>
+                    <button type="button" id="savebutton" class="btn btn-success btn-lg">Save</button>
                 </form>
             </div>
         </div>
@@ -88,7 +88,7 @@
         $('#denomination').val ('<%= coin.denomination %>');
         $('#comments').val ('<%= coin.comments %>');
 
-        $('#editbutton').click(function () {
+        $('#savebutton').click(function () {
             $.ajax({
                 type: "PUT",
                 url: "/list/edit/" + "<%= coin._id %>",

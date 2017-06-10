@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<% include partials/head.ejs%>
+
+<body>
+<% include partials/nav.ejs %>
+
+<div class="container list-action-container">
+    <div class="row">
+        <div class="card-large center">
+            <nav class="navbar ">
+                <ul class="nav navbar-nav list-action-1">
+                    <li><p class="nav-desc"><span class="glyphicon glyphicon-user"></span>Profile</p></li>
+                    <li><p class="nav-desc">Here you will edit your profile</p></li>
+                </ul>
+            </nav>
+            <div class="container">
+            <form>
+                <div class="form-inline">
+                    <div class="form-group">
+                    <img src="/img/profile.png" id="img-upload" class="profile-picture" />
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-file">Browse… <input type="file" id="imgInp" /></span>
+                            </span>
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                    <input type="text" class="form-control" id="firstname" name="firstname">
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" name="lastname">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email">
+                </div>
+                <button type="submit" class="btn btn-lg btn-success">Save</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partials/scripts.ejs %>
+
+<script>
+    $(document).ready( function() {
+
+
+        $('#email').val('<%= email %>');
+        $('#firstname').val('<%= firstname %>');
+        $('#lastname').val('<%= lastname %>');
+
+        $(document).on('change', '.btn-file :file', function() {
+            let input = $(this),
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+
+        $('.btn-file :file').on('fileselect', function(event, label) {
+
+            let input = $(this).parents('.input-group').find(':text'),
+                log = label;
+
+            if( input.length ) {
+                input.val(log);
+            } else {
+                if( log ) alert(log);
+            }
+
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function(){
+            readURL(this);
+        });
+    });
+</script>
+
+
+</body>
+</html>

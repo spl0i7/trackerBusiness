@@ -119,6 +119,28 @@ nav  {
     padding-right: 20px;
 }
 
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+
+
 
 /* Misc */
 
@@ -163,6 +185,11 @@ form {
     margin-left:10px;
 }
 
+.form-inline div{
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
 /*Glyphs*/
 
 .glyphicon {
@@ -180,8 +207,8 @@ form {
     height: 128px;
     border-radius: 50%;
     border: 2px solid #ffffff;
-
 }
+
 .profile-container {
     color: #ffffff;
 }
@@ -224,15 +251,18 @@ form {
 .list-action-2 {
     margin-right: 5px;
     margin-left: auto;
-    display: inline-block;
 }
 
 .list-action-1 li a:hover,.list-action-2 li a:hover {
-    background: rgb(49, 48, 53) !important;
+    background: transparent !important;
 }
 
 .list-action-1 li a, .list-action-2 li a  {
     font-size: 1.0em;
+}
+
+.list-action-1 li a:focus, .list-action-2 li a:focus  {
+    background: transparent !important;
 }
 
 .list-action-1 li a span, .list-action-2 li a span {
@@ -255,7 +285,12 @@ input[type="checkbox"] {
     display: none;
 }
 
+/* search box */
 
+#searchbutton {
+    margin-left: -50px;
+}
 
-
-
+.item-perpage {
+    margin-top:10px;
+}
