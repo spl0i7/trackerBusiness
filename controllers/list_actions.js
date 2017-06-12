@@ -25,7 +25,7 @@ actionController.doAddNew = function (req, res) {
         price : req.sanitize(req.body.purchaseprice),
         denomination : req.sanitize(req.body.denomination),
         grade : req.sanitize(req.body.grade),
-        comments : req.sanitize(req.body.comments)
+        comments : req.sanitize(req.body.comments),
     }
     User.findByIdAndUpdate({_id : req.user._id}, {$push: {inventory: coinInfo}}, {safe: true, upsert: true})
         .then(done=> {
@@ -48,7 +48,6 @@ actionController.removeCoins = function (req, res) {
 }
 actionController.editCoin = function (req, res) {
     if(!req.isAuthenticated()) res.redirect('/login');
-    console.log(req.params);
     let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
     return res.render('edit', {'coin' : coin[0]});
 }
@@ -123,10 +122,36 @@ actionController.searchInventory = function (req, res) {
         if(regex.test(coin.certification) || regex.test(coin.denomination) || regex.test(coin.grade))
             searchedItems.push(coin);
     })
-    return renderList('search', req, res, searchedItems);
+    return renderList('search', req, res, searchedItems, searchQuery);
 }
-function renderList(view, req, res, inventory) {
-    let paginationInfo = pagination(req, 5, inventory);
+
+
+actionController.sellCoin = function (req, res) {
+    if(!req.isAuthenticated()) res.redirect('/login');
+    let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
+    return res.render('sell', {'coin' : coin[0]});
+}
+
+actionController.doSellCoin = function (req, res) {
+    if(!req.isAuthenticated()) res.redirect('/login');
+
+    req.body.saleprice = Math.abs(Number(req.sanitize(req.body.saleprice)));
+    if(Number.isNaN(req.body.saleprice)) {
+        return res.json({success: false})
+    }
+    let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
+    coin = JSON.parse(JSON.stringify(coin[0]));
+    coin.price = req.sanitize(Math.abs(req.body.saleprice));
+    coin.date = new Date();
+    User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id : req.params.coinId}}})
+        .then(() => { return User.findByIdAndUpdate({_id: req.user._id}, {$push: {soldcoins: coin}}, {safe: true, upsert: true})})
+        .then(()=>{ return res.json({success:true});})
+        .catch(()=> { return res.json({success:false});});
+
+}
+
+function renderList(view, req, res, inventory, query) {
+    let paginationInfo = pagination(req, inventory);
     let url = req.url;
     if(url.indexOf('?') != -1) {
         url = url.substr(0,url.indexOf('?'));
@@ -140,7 +165,8 @@ function renderList(view, req, res, inventory) {
             firstname: req.user.firstname,
             lastname: req.user.lastname,
             email:  req.user.email,
-            username: req.user.username
+            username: req.user.username,
+            query: query
         });
 }
 module.exports = actionController;

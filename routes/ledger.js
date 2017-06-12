@@ -1,10 +1,9 @@
 let express = require('express');
+let controller = require('../controllers/ledger');
 let router = express.Router();
 
 /* GET ledger page. */
-router.get('/', function(req, res, next) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
-    return res.render('ledger');
-});
-
+router.get('/', controller.home);
+router.get('/buy', controller.buyLedger);
+router.get('/sell', controller.sellLedger);
 module.exports = router;

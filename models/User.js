@@ -11,12 +11,22 @@ let userSchema = mongoose.Schema(
                 firstname    : String,
                 lastname     : String,
                 inventory    : [{
+                        date            : {type: Date, default : Date.now },
                         year            : Number,
                         certification   : String,
                         price           : Number,
                         denomination    : String,
                         grade           : String,
-                        comments        : {type: String, default : ''}
+                        comments        : {type: String, default : ''},
+                }],
+                soldcoins   : [{
+                    date            : {type: Date, default : Date.now },
+                    year            : Number,
+                    certification   : String,
+                    price           : Number,
+                    denomination    : String,
+                    grade           : String,
+                    comments        : {type: String, default : ''},
                 }]
         }
 );

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<% include partials/head.ejs%>
+
+<body>
+<% include partials/nav.ejs %>
+
+<div class="container list-action-container">
+    <div class="row">
+        <div class="card-large center">
+            <nav class="navbar ">
+                <ul class="nav navbar-nav list-action-1">
+                    <li><p class="nav-desc"><span class="glyphicon glyphicon-tag"></span>Sell</p></li>
+                    <li><p class="nav-desc">Here You will sell your coins</p></li>
+                </ul>
+            </nav>
+            <div class="container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td><strong><h4>Parameter</h4></strong></td>
+                            <td><strong><h4>Value</h4></strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>Certification : </strong></td>
+                        <td id="certification"><%= coin.certification %></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Year : </strong></td>
+                        <td id="year"><%= coin.year %></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Denomination : </strong></td>
+                        <td id="denomination"><%= coin.denomination %></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grade : </strong></td>
+                        <td id="grade"><%= coin.grade %></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Purchase Price : </strong></td>
+                        <td id="purchaseprice"><%= coin.price %></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="sellprice">Price</label>
+                        <input type="text" class="form-control" name="saleprice">
+                        <button type="button" id="sellcoinbutton" class="btn btn-danger">Sell</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partials/scripts.ejs %>
+<script>
+    $(document).ready(function () {
+        $('#sellcoinbutton').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/list/sell/" + "<%= coin._id %>",
+                data: $('form').serialize(),
+                success: function (data) {
+                    if (data.success) location.href = "/list";
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

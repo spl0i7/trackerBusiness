@@ -238,7 +238,10 @@ form {
     color: #76FF03;
     font-weight: bold;
 }
-
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+    background-color:rgb(232,244,255);
+}
 /* list */
 
 .list-action-1 {
@@ -275,13 +278,8 @@ form {
 input[type="checkbox"] {
     transform:scale(2, 2);
 }
-#editbutton {
-    display: none;
-}
-#removebutton {
-    display: none;
-}
-#sellbutton {
+
+#sellbutton, #removebutton, #regradebutton, #editbutton {
     display: none;
 }
 
@@ -293,4 +291,9 @@ input[type="checkbox"] {
 
 .item-perpage {
     margin-top:10px;
+}
+
+.searchtools {
+    transition-duration: 0.4s;
+    display: none !important;
 }

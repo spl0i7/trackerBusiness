@@ -26,6 +26,7 @@
                     <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
                     <li><a id="sellbutton"   class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
                     <li><a id="editbutton"   class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
+                    <li><a id="regradebutton"   class="btn btn-info"><span class="glyphicon glyphicon-edit"></span>Regrade</a> </li>
                 </ul>
 
                 <ul class="nav navbar-nav list-action-2">
@@ -63,17 +64,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% for (let i = 0 ; i < inventory.length; ++i ) {%>
-                    <% if (i % 2 == 0) { %>
-                    <tr class="tr">
-                    <% } else { %>
-                    <tr class="light-blue tr" >
-                    <% } %>
-                        <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
-                        <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
-                        <td><%= inventory[i].certification%></td>
-                        <td>$ <%= inventory[i].price%></td>
-                    </tr>
+                    <% if(typeof inventory === 'object' && inventory) {%>
+                        <% for (let i = 0 ; i < inventory.length ; ++i ) {%>
+                            <% if (i % 2 == 0) { %>
+                            <tr class="tr">
+                            <% } else { %>
+                            <tr class="light-blue tr" >
+                            <% } %>
+                                <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
+                                <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
+                                <td><%= inventory[i].certification%></td>
+                                <td>$ <%= inventory[i].price%></td>
+                            </tr>
+                            <% }%>
                     <% }%>
                     </tbody>
                 </table>
@@ -91,51 +94,55 @@
                 </ul>
             </nav>
         </div>
+        <div id="alertbox" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Attention</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please select one item to edit or sell</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <% include partials/scripts.ejs %>
 <script>
-
-
     function showButtons() {
         if ( $("[type=checkbox]:checked").length > 0) {
             $('#editbutton').show('slow');
             $('#removebutton').show('slow');
             $('#sellbutton').show('slow');
+            $('#regradebutton').show('slow');
         }
         else {
             $('#editbutton').hide('slow');
             $('#removebutton').hide('slow');
             $('#sellbutton').hide('slow');
+            $('#regradebutton').hide('slow');
         }
     }
 
+    function multipleSelect() {
+        if($("[type=checkbox]:checked").length > 1) {
+            $('#alertbox').modal('show');
+            return true;
+        }
+        return false;
+    }
     $(document).ready(function () {
-        $('.searchtools').hide();
-        $('input[type=checkbox]').each( function() {
-            $(this).removeAttr('checked');
-        });
 
 
-        $('.selectpicker').change(function () {
-            console.log($(this).val());
-        })
-
-        $('#searchbutton').click(function () {
-            let searchQuery = $('#searchbox').val();
-            location.href = location.href + '/search/' + searchQuery;
-        })
-
-        $('#searchicon').click(function () {
-            $(this).hide();
-            $('.searchtools').show('slow');
-        });
         $('[type=checkbox]').change(showButtons());
 
         $('.tr').click(function (e) {
             $(this).toggleClass('material-green');
-
-
             if($(e.target).closest('input[type="checkbox"]').length == 0){
                 if ($(this).find('input').is(':checked')) {
                     $(this).find('input').prop('checked', false);
@@ -147,15 +154,29 @@
             showButtons();
         });
 
-        $('#editbutton').click(function () {
-            let selectedCoin;
-            $("[type=checkbox]:checked").each ( function() {
-                selectedCoin = $(this).attr("name");
-            });
-            if(selectedCoin) {
-                window.location.href = "/list/edit/" + selectedCoin;
-            }
+        $('#sellbutton').click(function () {
+            if(!multipleSelect()) {
 
+                let selectedCoin;
+                $("[type=checkbox]:checked").each(function () {
+                    selectedCoin = $(this).attr("name");
+                });
+                if (selectedCoin) {
+                    window.location.href = "/list/sell/" + selectedCoin;
+                }
+            }
+        });
+        $('#editbutton').click(function () {
+
+            if(!multipleSelect()) {
+                let selectedCoin;
+                $("[type=checkbox]:checked").each(function () {
+                    selectedCoin = $(this).attr("name");
+                });
+                if (selectedCoin) {
+                    window.location.href = "/list/edit/" + selectedCoin;
+                }
+            }
         })
         $('#removebutton').click(function () {
             let selectedCoins = [];
@@ -177,6 +198,28 @@
                 });
             }
         });
+        $('#searchbutton').click(function () {
+            let searchQuery = $('#searchbox').val();
+            location.href = location.protocol + '//' + location.host + location.pathname + '/search/' + searchQuery;
+        })
+
+        $('#searchicon').click(function () {
+            $(this).hide();
+            $('.searchtools').attr('style', 'display: block !important');
+
+        });
+
+        $('input[type=checkbox]').each( function() {
+            $(this).removeAttr('checked');
+        });
+
+
+        $('.selectpicker').change(function () {
+            location.href = location.protocol + '//' + location.host + location.pathname + '?items=' + $(this).val();
+        });
+        $('.selectpicker').val(getParam('items'));
+
+
     });
 </script>
 </body>

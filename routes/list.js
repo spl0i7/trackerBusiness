@@ -11,5 +11,8 @@ router.get('/add/', actions.addNew);
 router.post('/add/', actions.doAddNew);
 router.get('/sort/:type/:order', actions.sortInventory);
 router.get('/search/:query', actions.searchInventory);
+router.get('/sort/:type/:order/search/:query', actions.searchInventory);
+router.get('/sell/:coinId', actions.sellCoin);
+router.post('/sell/:coinId', actions.doSellCoin);
 
 module.exports = router;

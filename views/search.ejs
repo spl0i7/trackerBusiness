@@ -23,28 +23,10 @@
             <nav class="navbar ">
 
                 <ul class="nav navbar-nav list-action-1">
-                    <li><a>Search results for "<%= query %>"</a></li>
+                    <li><a><h4>Search results for <span class="text-danger">"<%= query %>"</span></h4></a></li>
                     <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
                     <li><a id="sellbutton"   class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
                     <li><a id="editbutton"   class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
-                </ul>
-
-                <ul class="nav navbar-nav list-action-2">
-                    <li class="searchtools">
-                        <a>
-                            <input id="searchbox" type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
-                        </a>
-                    </li>
-                    <li class="searchtools">
-                        <a>
-                            <button id="searchbutton" type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span></button>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <span id="searchicon" class="glyphicon glyphicon-search"></span>
-                        </a>
-                    </li>
                 </ul>
             </nav>
             <div class="list">
@@ -58,17 +40,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% for (let i = 0 ; i < inventory.length; ++i ) {%>
-                    <% if (i % 2 == 0) { %>
-                    <tr class="tr">
-                        <% } else { %>
-                    <tr class="light-blue tr" >
-                        <% } %>
-                        <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
-                        <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
-                        <td><%= inventory[i].certification%></td>
-                        <td>$ <%= inventory[i].price%></td>
-                    </tr>
+                    <% if(typeof inventory === 'object' && inventory) {%>
+                        <% for (let i = 0 ; i < inventory.length; ++i ) {%>
+                        <% if (i % 2 == 0) { %>
+                        <tr class="tr">
+                            <% } else { %>
+                        <tr class="light-blue tr" >
+                            <% } %>
+                            <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
+                            <td><%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
+                            <td><%= inventory[i].certification%></td>
+                            <td>$ <%= inventory[i].price%></td>
+                        </tr>
+                        <% }%>
                     <% }%>
                     </tbody>
                 </table>
@@ -93,15 +77,7 @@
         }
     }
     $(document).ready(function () {
-        $('#searchbutton').click(function () {
-            let searchQuery = $('#searchbox').val();
-            location.href =  location.protocol + '//' + location.host + '/list/search/' +searchQuery;
-        })
 
-        $('#searchicon').click(function () {
-            $(this).hide('slow');
-            $('.searchtools').show('slow');
-        });
         $('[type=checkbox]').change(showButtons());
 
         $('.tr').click(function (e) {
