@@ -15,6 +15,39 @@
         return results[1] ;
     }
 
+    function scrapDataPCGS(html){
+        let coinInfo = {};
+        let table = $(html).find("table tbody tr td");
+        table.each(function(i, v){
+            if($(this).text().replace(/\n|\r|\s/g,"").match(/grade/gi)) {
+                coinInfo.grade = table.eq(i+1).text().replace(/\n|\r|\s/g,"");
+            }
+            if($(this).text().replace(/\n|\r|\s/g,"").match(/denomination/gi)) {
+                coinInfo.denomination = table.eq(i+1).text().replace(/\n|\r|\s/g,"");
+            }
+            if($(this).text().replace(/\n|\r|\s/g,"").match(/price/gi)) {
+                coinInfo.price = table.eq(i+1).text().replace(/\n|\r|\s/g,"");
+                coinInfo.price = coinInfo.price.match(/\d+/g)[0];
+            }
+
+            if($(this).text().replace(/\n|\r|\s/g,"").match(/date/gi)) {
+                coinInfo.year = table.eq(i+1).text().replace(/\n|\r|\s/g,"");
+                coinInfo.year = coinInfo.year.match(/\d+/g)[0];
+            }
+        });
+        return coinInfo;
+    }
+
+
+    function updateForm(coinInfo) {
+        console.log(coinInfo)
+        $('#purchaseprice').val(coinInfo.price);
+        $('#grade').val (coinInfo.grade);
+        $('#year').val (coinInfo.year);
+        $('#denomination').val (coinInfo.denomination);
+    }
+
+
     $(document).ready(function () {
         let current = location.href;
         $('.navbar-main li').each(function(){

@@ -79,6 +79,15 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
+/* check for login */
+app.use((req, res, next)=>{
+    if(req.url.match(/^\/list/) || req.url.match(/^\/ledger/)) {
+        if(!req.isAuthenticated()) return res.redirect('/login')
+    }
+    next();
+})
+
+
 //config default middlewares
 app.use(logger('dev'));
 app.use(bodyParser.json());

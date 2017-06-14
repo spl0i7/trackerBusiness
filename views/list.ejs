@@ -45,8 +45,6 @@
                     <li><div class="item-perpage">
                             <select class="selectpicker" data-width="65px">
                                 <option>25</option>
-                                <option>50</option>
-                                <option>100</option>
                             </select>
                         </div>
                     </li>
@@ -84,11 +82,11 @@
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-2">
                     <% if(currentPage > 1 ) { %>
-                    <% let previousPage = url + '?page=' + (currentPage -1) %>
+                    <% let previousPage = url + '?page=' + (Number(currentPage) -1) %>
                     <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
                     <% } %>
                     <% if (pageCount > 1 && currentPage != pageCount) { %>
-                    <% let nextPage = url + '?page=' + (currentPage +1)%>
+                    <% let nextPage = url + '?page=' + (Number(currentPage) +1)%>
                     <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
                     <% } %>
                 </ul>
@@ -102,7 +100,7 @@
                         <h4 class="modal-title">Attention</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Please select one item to edit or sell</p>
+                        <p>Please select one item to edit</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
@@ -155,15 +153,26 @@
         });
 
         $('#sellbutton').click(function () {
-            if(!multipleSelect()) {
-
-                let selectedCoin;
-                $("[type=checkbox]:checked").each(function () {
-                    selectedCoin = $(this).attr("name");
+            let selectedCoins = [];
+            $("[type=checkbox]:checked").each(function () {
+                selectedCoins.push($(this).attr("name"));
+            });
+            if (selectedCoins.length > 0) {
+                $.ajax({
+                    url: '/list/sell',
+                    type: 'POST',
+                    data: {
+                        coins: selectedCoins
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            location.href = '/list/sell/' + data.url;
+                        }
+                        else {
+                            location.href = '/list';
+                        }
+                    }
                 });
-                if (selectedCoin) {
-                    window.location.href = "/list/sell/" + selectedCoin;
-                }
             }
         });
         $('#editbutton').click(function () {

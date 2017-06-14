@@ -1,10 +1,10 @@
 let User = require("../models/User");
 let pagination = require('../controllers/pagination');
+let crypto = require('crypto');
 
 let actionController = {};
 
 actionController.home = function(req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     let url = req.url;
     if(url.indexOf('?') != -1) {
         url.substring(0,url.indexOf('?'));
@@ -12,13 +12,10 @@ actionController.home = function(req, res) {
     return renderList('list',req,res,req.user.inventory)
 }
 actionController.addNew = function (req, res) {
-    if(!req.isAuthenticated())
-        return res.redirect('/login');
     return res.render('add_new');
 
 }
 actionController.doAddNew = function (req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     coinInfo = {
         year : req.sanitize(req.body.year),
         certification: req.sanitize(req.body.certification),
@@ -34,7 +31,6 @@ actionController.doAddNew = function (req, res) {
         .catch(err=>console.log(err))
 }
 actionController.removeCoins = function (req, res) {
-    if (!req.isAuthenticated()) return res.redirect('/login');
     let coinIds = req.body['coins[]'];
     User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id: {'$in' : coinIds}}}}, {multi: true})
         .then(noAffected => {
@@ -47,12 +43,10 @@ actionController.removeCoins = function (req, res) {
         });
 }
 actionController.editCoin = function (req, res) {
-    if(!req.isAuthenticated()) res.redirect('/login');
     let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
     return res.render('edit', {'coin' : coin[0]});
 }
 actionController.doEditCoin = function (req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     let coinInfo = {
         year : req.sanitize(req.body.year),
         certification: req.sanitize(req.body.certification),
@@ -78,7 +72,6 @@ actionController.doEditCoin = function (req, res) {
         });
 }
 actionController.sortInventory = function (req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     let inventory = JSON.parse(JSON.stringify(req.user.inventory));
     switch (req.params.type) {
         case "price":
@@ -114,7 +107,6 @@ actionController.sortInventory = function (req, res) {
     return renderList('list', req, res, inventory);
 }
 actionController.searchInventory = function (req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     let searchQuery = req.sanitize(req.params.query);
     let searchedItems = [];
     let regex = new RegExp(searchQuery, 'gi');
@@ -124,38 +116,58 @@ actionController.searchInventory = function (req, res) {
     })
     return renderList('search', req, res, searchedItems, searchQuery);
 }
-
-
 actionController.sellCoin = function (req, res) {
-    if(!req.isAuthenticated()) res.redirect('/login');
-    let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
-    return res.render('sell', {'coin' : coin[0]});
-}
-
-actionController.doSellCoin = function (req, res) {
-    if(!req.isAuthenticated()) res.redirect('/login');
-
-    req.body.saleprice = Math.abs(Number(req.sanitize(req.body.saleprice)));
-    if(Number.isNaN(req.body.saleprice)) {
-        return res.json({success: false})
+    let coinIds = req.body['coins[]'];
+    req.session.saleCoins = {
+        coinIds : coinIds,
+        url     : crypto.randomBytes(7).toString('hex')
     }
-    let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
-    coin = JSON.parse(JSON.stringify(coin[0]));
-    coin.price = req.sanitize(Math.abs(req.body.saleprice));
-    coin.date = new Date();
-    User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id : req.params.coinId}}})
-        .then(() => { return User.findByIdAndUpdate({_id: req.user._id}, {$push: {soldcoins: coin}}, {safe: true, upsert: true})})
-        .then(()=>{ return res.json({success:true});})
-        .catch(()=> { return res.json({success:false});});
+    if(typeof  req.session.saleCoins.coinIds === 'string')
+        req.session.saleCoins.coinIds = [req.session.saleCoins.coinIds]
+    return res.json({success:true, url: req.session.saleCoins.url});
+}
+actionController.sellCoinPage = function (req, res) {
+    if(req.session.saleCoins) {
+        let saleCoins = JSON.parse(JSON.stringify(req.session.saleCoins));
+        delete req.session.saleCoins;
+
+        let coinIds = [];
+        for(let i = 0 ; i < req.user.inventory.length; ++i) {
+            for(let j = 0; j < saleCoins.coinIds.length; ++j) {
+                if(req.user.inventory[i]._id == saleCoins.coinIds[j])
+                    coinIds.push(req.user.inventory[i]);
+            }
+        }
+        if(saleCoins.url === req.params.urlId) {
+            return res.render('sell', {coinIds : coinIds});
+        }
+    }
+    return res.redirect('/list');
 
 }
-
+actionController.doSellCoin = function (req, res) {
+    let coinIds = Object.keys(req.body);
+    let coins = [];
+    for(let i = 0 ; i < coinIds.length-1; ++i) {
+        for(let j = 0 ; j < req.user.inventory.length; ++j){
+            if(String(coinIds[i]) === String(req.user.inventory[j]._id)) {
+                let coin = JSON.parse(JSON.stringify(req.user.inventory[j]));
+                coin.date = new Date();
+                coin.price = req.sanitize(Number(+req.body[coinIds[i]]));
+                coins.push(coin);
+            }
+        }
+    }
+    let customerName = req.sanitize(req.body[coinIds[coinIds.length -1]]);
+    if(!customerName) customerName = "";
+    User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id : {'$in' : coinIds}}}})
+        .then(() => { return User.findByIdAndUpdate({_id: req.user._id}, {$push: {soldcoins: {$each:coins}}}, {safe: true, upsert: true})})
+        .then(()=>{ return res.render('invoice', {coinIds : coins, customerName : customerName});})
+        .catch(()=> { return res.json({success:false});});
+}
 function renderList(view, req, res, inventory, query) {
     let paginationInfo = pagination(req, inventory);
-    let url = req.url;
-    if(url.indexOf('?') != -1) {
-        url = url.substr(0,url.indexOf('?'));
-    }
+    let url = req.url.split('?')[0];
     return res.render(view,
         {
             url : '/list' + url,

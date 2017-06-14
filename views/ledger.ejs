@@ -26,12 +26,10 @@
                     <li><p class="nav-desc"><strong>LEDGER</strong></p></li>
                     <li><p class="nav-desc">Here You will see all transaction history</p></li>
                 </ul>
-                <ul class="nav navbar-nav list-action-2"
+                <ul class="nav navbar-nav list-action-2">
                     <li><div class="item-perpage">
                             <select class="selectpicker" data-width="65px">
                                 <option>25</option>
-                                <option>50</option>
-                                <option>100</option>
                             </select>
                         </div>
                     </li>
@@ -72,7 +70,7 @@
                             <tbody>
                             <% for(let i = 0; i < coins.length; ++i){ %>
                                 <tr>
-                                    <td><%= i+1 %></td>
+                                    <td><%= coins[i].index %></td>
                                     <% let date = new Date(coins[i].date)%>
                                     <td><%= date.getMonth() + 1 %>/<%= date.getDate() %>/<%= date.getFullYear() %></td>
                                     <% if (coins[i].soldcoin){%>
@@ -83,9 +81,9 @@
                                     <td><%= coins[i].grade %> - <%= coins[i].denomination %></td>
                                     <td><%= coins[i].certification %></td>
                                     <% if(!coins[i].soldcoin || coins[i].price < 0) { %>
-                                        <td class="text-danger"><%= coins[i].price %></td>
+                                        <td class="text-danger"> $ <%= coins[i].price %></td>
                                     <% } else { %>
-                                        <td class="text-success"><%= coins[i].price  %></td>
+                                        <td class="text-success"> $ <%= coins[i].price  %></td>
                                     <% } %>
                                     </tr>
                             <% } %>
@@ -97,11 +95,11 @@
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-2">
                     <% if(currentPage > 1 ) { %>
-                    <% let previousPage = url + '?page=' + (currentPage -1) %>
+                    <% let previousPage = url + '?page=' + (Number(currentPage) -1) %>
                     <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
                     <% } %>
                     <% if (pageCount > 1 && currentPage != pageCount) { %>
-                    <% let nextPage = url + '?page=' + (currentPage +1)%>
+                    <% let nextPage = url + '?page=' + (Number(currentPage) +1)%>
                     <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
                     <% } %>
                 </ul>

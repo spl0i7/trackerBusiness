@@ -10,13 +10,12 @@
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-1">
                     <li><p class="nav-desc"><span class="glyphicon glyphicon-tag"></span>Invoice</p></li>
-                    <li><p class="nav-desc">Your invoice</p></li>
+                    <li><p class="nav-desc">Invoice for <%= customerName %></p></li>
                 </ul>
                 <ul class="nav navbar-nav list-action-2">
                     <li><a class="btn btn-sm btn-success" onclick="window.print()"><span class="glyphicon glyphicon-print"> Save to PDF</span> </a> </li>
                 </ul>
             </nav>
-            <% let total = 0 %>
             <div class="container">
                 <table class="table table-striped">
                     <thead>
@@ -28,41 +27,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
+                    <% let total = 0%>
+                    <% if(coinIds) { %>
+                        <% for(let i = 0; i < coinIds.length; ++i){%>
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><%= coinIds[i].certification %></td>
+                            <td><%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
+                            <td>$ <%= coinIds[i].price %></td>
+                        </tr>
+                    <% total += Number(coinIds[i].price) %>
+                        <% } %>
+                    <% } %>
                     <tr>
                         <td>-</td>
                         <td>-</td>
-                        <td><h3>TOTAL = </h3></td>
-                        <td><h3>$ 556</h3></td>
+                        <td><h4>Total = </h4></td>
+                        <td><h4>$ <%= total %></h4></td>
                     </tr>
                     </tbody>
                 </table>

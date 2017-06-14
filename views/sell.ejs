@@ -14,41 +14,32 @@
                 </ul>
             </nav>
             <div class="container">
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td><strong><h4>Parameter</h4></strong></td>
-                            <td><strong><h4>Value</h4></strong></td>
+                            <td><strong>S.No</strong></td>
+                            <td><strong>Certification</strong></td>
+                            <td><strong>Description</strong></td>
+                            <td><strong>Sale Price (USD)</strong></td>
                         </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><strong>Certification : </strong></td>
-                        <td id="certification"><%= coin.certification %></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Year : </strong></td>
-                        <td id="year"><%= coin.year %></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Denomination : </strong></td>
-                        <td id="denomination"><%= coin.denomination %></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Grade : </strong></td>
-                        <td id="grade"><%= coin.grade %></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Purchase Price : </strong></td>
-                        <td id="purchaseprice"><%= coin.price %></td>
-                    </tr>
+                    <% if(coinIds) { %>
+                        <% for(let i = 0; i < coinIds.length; ++i){%>
+                            <tr>
+                                <td><%= i+1 %></td>
+                                <td><%= coinIds[i].certification %></td>
+                                <td><%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
+                                <td><input type="number" class="form-control saleinput" name="<%= coinIds[i]._id %>"></td>
+                            </tr>
+                        <% } %>
+                    <% } %>
                     </tbody>
                 </table>
                 <form class="form-inline">
                     <div class="form-group">
-                        <label for="sellprice">Price</label>
-                        <input type="text" class="form-control" name="saleprice">
-                        <button type="button" id="sellcoinbutton" class="btn btn-danger">Sell</button>
+                        <input type="text" name="customername" class="form-control customername" placeholder="Customer Name"/>
+                        <button type="button" id="sellcoinbutton" class="btn btn-danger btn-lg">Sell</button>
                     </div>
                 </form>
             </div>
@@ -60,14 +51,18 @@
 <script>
     $(document).ready(function () {
         $('#sellcoinbutton').click(function () {
-            $.ajax({
-                type: "POST",
-                url: "/list/sell/" + "<%= coin._id %>",
-                data: $('form').serialize(),
-                success: function (data) {
-                    if (data.success) location.href = "/list";
-                }
+            let form = $('<form />', {
+                action: '/list/sell/invoice',
+                method: 'POST',
+                style: 'display: none;'
             });
+            $('.saleinput').each(function () {
+                $(this).appendTo(form);
+            });
+            $('.customername').each(function () {
+                $(this).appendTo(form);
+            })
+            form.appendTo('body').submit();
         });
     });
 </script>

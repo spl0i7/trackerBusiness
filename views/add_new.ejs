@@ -60,23 +60,6 @@
 
     <% include partials/scripts.ejs %>
     <script>
-        function scrapDataPCGS(html){
-            let coinInfo = {};
-            $(html).find("table tbody tr td").each(function(i, v){
-                if(i == 9) coinInfo.grade = $(this).text().replace(/\n|\r|\s/g,"");
-                if(i == 3) coinInfo.year = $(this).text().replace(/\n|\r|\s/g,"");
-                if(i == 5) coinInfo.denomination = $(this).text().replace(/\n|\r|\s/g,"");
-                if(i == 17) coinInfo.price = $(this).text().replace(/\n|\r|\s|\$/g,"");
-            })
-            return coinInfo;
-        }
-
-        function updateForm(coinInfo) {
-            $('#purchaseprice').val(coinInfo.price);
-            $('#grade').val (coinInfo.grade);
-            $('#year').val (coinInfo.year);
-            $('#denomination').val (coinInfo.denomination);
-        }
         $(document).ready(function () {
 
             $('#grader').change(function () {

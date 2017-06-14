@@ -190,6 +190,10 @@ form {
     padding-bottom: 20px;
 }
 
+.saleinput {
+    width: 100px;
+}
+
 /*Glyphs*/
 
 .glyphicon {
