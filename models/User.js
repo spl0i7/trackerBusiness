@@ -27,6 +27,15 @@ let userSchema = mongoose.Schema(
                     denomination    : String,
                     grade           : String,
                     comments        : {type: String, default : ''},
+                }],
+                regrade :[{
+                    date            : {type: Date, default : Date.now },
+                    year            : Number,
+                    certification   : String,
+                    price           : Number,
+                    denomination    : String,
+                    grade           : String,
+                    comments        : {type: String, default : ''},
                 }]
         }
 );

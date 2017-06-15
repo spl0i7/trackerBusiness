@@ -9,28 +9,8 @@ let passport = require('passport');
 let mongoose = require('mongoose');
 let LocalStrategy = require('passport-local').Strategy;
 let expressSanitizer = require('express-sanitizer');
-let  multer  = require('multer');
-let upload = multer({
-    dest: './public/img/profile' ,
-    fileFilter: function (req, file, cb) {
-
-        let filetypes = /jpeg|jpg/;
-        let mimetype = filetypes.test(file.mimetype);
-        let extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-
-        if (mimetype && extname) {
-            return cb(null, true);
-        }
-        cb("Error: File upload only supports the following filetypes - " + filetypes);
-    },
-    filename : function (req, file, cb) {
-        require('crypto').randomBytes( 24 , function(err, buffer) {
-            cb(null, buffer.toString('hex') + '-' + Date.now());
-        });
-
-    }
-});
-
+let recaptcha = require('express-recaptcha');
+let config = require('./config');
 // load up the user model
 let User = require('./models/User');
 
@@ -47,13 +27,9 @@ let app = express();
 
 //mongodb connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/trackerbusiness')
+mongoose.connect(config.database)
     .then(()=>console.log('database connection successful'))
     .catch(err=>console.log(err));
-
-
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -81,12 +57,16 @@ passport.deserializeUser(User.deserializeUser());
 
 /* check for login */
 app.use((req, res, next)=>{
-    if(req.url.match(/^\/list/) || req.url.match(/^\/ledger/)) {
+    if( req.url.match(/^\/list/) ||
+        req.url.match(/^\/ledger/) ||
+        req.url.match(/^\/regrade/)) {
         if(!req.isAuthenticated()) return res.redirect('/login')
     }
     next();
-})
+});
 
+/* recaptcha */
+recaptcha.init(config.site_key, config.secret_key);
 
 //config default middlewares
 app.use(logger('dev'));
@@ -96,10 +76,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSanitizer());
 
-
-
 //todo protected route middleware
-
 
 app.use('/', index);
 app.use('/', users);
@@ -107,10 +84,6 @@ app.use('/profile', profile);
 app.use('/list', list);
 app.use('/regrade', regrade);
 app.use('/ledger', ledger);
-
-
-//
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

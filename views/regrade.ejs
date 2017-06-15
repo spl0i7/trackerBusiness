@@ -3,17 +3,35 @@
 
 <body>
 <% include partials/nav.ejs %>
-
+<div class="jumbotron profile-main">
+    <div class="container profile-container">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="/img/profile.png" class="profile-picture"/>
+            </div>
+            <div class="col-md-6">
+                <h3 class="profile-name"><%= firstname %>  <%= lastname %> ( <%= username %> )</h3>
+                <h4> <%= email %></h4>
+            </div>
+            <div class="col-md-offset-6"></div>
+        </div>
+    </div>
+</div>
 <div class="container list-action-container">
     <div class="row">
         <div class="card-large center">
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-1">
-                    <li><p class="nav-desc"><span class="glyphicon glyphicon-tag"></span>Invoice</p></li>
-                    <li><p class="nav-desc">Your invoice</p></li>
+                    <li><p class="nav-desc"><span class="glyphicon glyphicon-briefcase"></span>Regrade</p></li>
+                    <li><p class="nav-desc">Items for regrading</p></li>
                 </ul>
                 <ul class="nav navbar-nav list-action-2">
-                    <li><a class="btn btn-sm btn-success" onclick="window.print()"><span class="glyphicon glyphicon-print"> Save to PDF</span> </a> </li>
+                    <li><div class="item-perpage">
+                            <select class="selectpicker" data-width="65px">
+                                <option>25</option>
+                            </select>
+                        </div>
+                    </li>
                 </ul>
             </nav>
             <% let total = 0 %>
@@ -22,52 +40,60 @@
                     <thead>
                     <tr>
                         <td><strong>S.No</strong></td>
+                        <td><strong>Date (DD/MM/YYYY) </strong></td>
                         <td><strong>Certification</strong></td>
-                        <td><strong>Description</strong></td>
-                        <td><strong>Sale Price (USD)</strong></td>
+                        <td><strong>Grade</strong></td>
+                        <td><strong>New Grade</strong></td>
+                        <td><strong>New Certification</strong></td>
+                        <td><strong>Action</strong></td>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12598-85</td>
-                        <td>50C - F15</td>
-                        <td>$ 895</td>
-                    </tr>
-                    <tr>
-                        <td>-</td>
-                        <td>-</td>
-                        <td><h3>TOTAL = </h3></td>
-                        <td><h3>$ 556</h3></td>
-                    </tr>
+                    <% if(coinIds) {%>
+                    <% for(let i = 0; i < coinIds.length; ++i){%>
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <% let date = new Date(coinIds[i].date)%>
+                            <td><%= date.getMonth() + 1 %>/<%= date.getDate() %>/<%= date.getFullYear() %></td>
+                            <td><%= coinIds[i].certification %></td>
+                            <td><%= coinIds[i].grade %></td>
+                            <td><input class="form-control input-sm"></td>
+                            <td><input class="form-control input-sm"></td>
+                            <td><button class="btn btn-success btn-sm" id="<%= coinIds[i]._id %>">Save</button> </td>
+                        </tr>
+                        <% }%>
+                    <% } %>
                     </tbody>
                 </table>
             </div>
-
+            <nav class="navbar ">
+                <ul class="nav navbar-nav list-action-2">
+                    <% if(currentPage > 1 ) { %>
+                    <% let previousPage = url + '?page=' + (Number(currentPage) -1) %>
+                    <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
+                    <% } %>
+                    <% if (pageCount > 1 && currentPage != pageCount) { %>
+                    <% let nextPage = url + '?page=' + (Number(currentPage) +1)%>
+                    <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
+                    <% } %>
+                </ul>
+            </nav>
+            <div id="alertbox" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Attention</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Please make sure all field are valid.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -75,6 +101,32 @@
 <% include partials/scripts.ejs %>
 <script>
     $(document).ready(function () {
+        $('button').click(function() {
+           let inputs = $(this).parent().parent().find('input');
+           let coinInfo = {};
+           coinInfo.id = $(this).attr('id');
+           coinInfo.grade = inputs.eq(0).val();
+           coinInfo.certification = inputs.eq(1).val();
+           if(coinInfo.grade.length == 0 || coinInfo.certification.length == 0) {
+               $('#alertbox').modal('show');
+           }
+           else {
+               $(this).replaceWith('<img src="/img/loading.gif" width="48px" height="48px" />');
+               $.ajax({
+                   url: '/regrade',
+                   type: 'POST',
+                   data: {
+                       coin: coinInfo
+                   },
+                   success: function (data) {
+                       if (data.success) {
+                           location.href = "/regrade";
+                       }
+                   }
+               });
+           }
+        });
+
     });
 </script>
 </body>

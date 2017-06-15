@@ -165,6 +165,29 @@ actionController.doSellCoin = function (req, res) {
         .then(()=>{ return res.render('invoice', {coinIds : coins, customerName : customerName});})
         .catch(()=> { return res.json({success:false});});
 }
+actionController.doRegrade = function (req, res) {
+    let coinIds = req.body['coins[]'];
+    if(typeof coinIds === 'string')
+        coinIds = [coinIds];
+
+    let coins = [];
+    for(let i = 0 ; i < coinIds.length; ++i) {
+        for(let j = 0 ; j < req.user.inventory.length; ++j){
+            if(String(coinIds[i]) === String(req.user.inventory[j]._id)) {
+                let coin = JSON.parse(JSON.stringify(req.user.inventory[j]));
+                coins.push(coin);
+            }
+        }
+    }
+    User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id: {'$in' : coinIds}}}}, {multi: true})
+        .then(noAffected => {
+            return User.findByIdAndUpdate({_id: req.user._id}, {$push: {regrade: {$each:coins}}}, {safe: true, upsert: true})})
+        .then(()=>  { return res.json({success:true}) })
+        .catch(err => {
+            console.log(err)
+            res.json({success:false})
+        });
+}
 function renderList(view, req, res, inventory, query) {
     let paginationInfo = pagination(req, inventory);
     let url = req.url.split('?')[0];

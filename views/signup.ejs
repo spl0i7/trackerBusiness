@@ -37,7 +37,15 @@
                     <label for="pwd">Password</label>
                     <input type="password" class="form-control" id="pwd" name="password">
                 </div>
-                <button type="submit" class="btn btn-login">Create Account</button>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LcPbyUUAAAAAN9EQl2ROqwK9mDyjp_9i1ORZ7Ly"></div>
+                </div>
+                <% if(typeof message !== 'undefined') { %>
+                <div class="form-group">
+                    <h4 class="text-danger"><%= message %></h4>
+                </div>
+                <%}%>
+                <button type="submit" id="signup" class="btn btn-login">Create Account</button>
             </form>
         </div>
 
@@ -45,5 +53,24 @@
 </div>
 
 <% include partials/scripts.ejs %>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script>
+    $(document).ready(function () {
+        let input = $('input'),
+            signup = $('#signup');
+        signup.attr('disabled', true);
+
+        input.keyup(function() {
+            let trigger = false;
+            input.each(function() {
+                if (!$(this).val()) {
+                    trigger = true;
+                }
+            });
+            trigger ? signup.attr('disabled', true) : signup.removeAttr('disabled');
+        });
+    });
+
+</script>
 </body>
 </html>

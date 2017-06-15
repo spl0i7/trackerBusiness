@@ -26,7 +26,7 @@
                     <li><a id="removebutton" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Remove</a> </li>
                     <li><a id="sellbutton"   class="btn btn-danger" href="#"><span class="glyphicon glyphicon-tag"></span>Sell</a> </li>
                     <li><a id="editbutton"   class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span>Edit</a> </li>
-                    <li><a id="regradebutton"   class="btn btn-info"><span class="glyphicon glyphicon-edit"></span>Regrade</a> </li>
+                    <li><a id="regradebutton"   class="btn btn-info"><span class="glyphicon glyphicon-briefcase"></span>Regrade</a> </li>
                 </ul>
 
                 <ul class="nav navbar-nav list-action-2">
@@ -211,18 +211,34 @@
             let searchQuery = $('#searchbox').val();
             location.href = location.protocol + '//' + location.host + location.pathname + '/search/' + searchQuery;
         })
-
         $('#searchicon').click(function () {
             $(this).hide();
             $('.searchtools').attr('style', 'display: block !important');
 
         });
-
+        $('#regradebutton').click(function(){
+            let selectedCoins = [];
+            $("[type=checkbox]:checked").each ( function() {
+                selectedCoins.push($(this).attr("name"));
+            });
+            if(selectedCoins.length > 0) {
+                $.ajax({
+                    url: '/list/regrade',
+                    type: 'PUT',
+                    data: {
+                        coins: selectedCoins
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        });
         $('input[type=checkbox]').each( function() {
             $(this).removeAttr('checked');
         });
-
-
         $('.selectpicker').change(function () {
             location.href = location.protocol + '//' + location.host + location.pathname + '?items=' + $(this).val();
         });

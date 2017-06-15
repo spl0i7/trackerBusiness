@@ -15,5 +15,5 @@ router.get('/sort/:type/:order/search/:query', actions.searchInventory);
 router.post('/sell', actions.sellCoin);
 router.get('/sell/:urlId', actions.sellCoinPage);
 router.post('/sell/invoice', actions.doSellCoin);
-
+router.put('/regrade', actions.doRegrade);
 module.exports = router;

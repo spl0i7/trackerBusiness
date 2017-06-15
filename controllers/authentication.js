@@ -18,21 +18,21 @@ userController.register = function(req, res) {
 
 // Post registration
 userController.doRegister = function(req, res) {
-
-    User.register(new User({
-            email : req.sanitize(req.body.email),
-            username : req.sanitize(req.body.username),
+    if(!req.recaptcha) {
+        User.register(new User({
+            email: req.sanitize(req.body.email),
+            username: req.sanitize(req.body.username),
             firstname: req.sanitize(req.body.firstname),
-            lastname : req.sanitize(req.body.lastname)
-    }), req.body.password, function(err, user) {
-        if (err) {
-            console.log(err);
-            return res.render('error', {message:'error in signup', error:err});
-        }
-        passport.authenticate('local')(req, res, function () {
-            return res.redirect('/');
+            lastname: req.sanitize(req.body.lastname)
+        }), req.body.password, function (err, user) {
+            if (err) {
+                return res.render('signup', {message: 'Error, make sure all field are valid'});
+            }
+            passport.authenticate('local')(req, res, function () {
+                return res.redirect('/');
+            });
         });
-    });
+    }
 };
 
 // Go to login page

@@ -1,10 +1,8 @@
 let express = require('express');
+let controller = require('../controllers/regrade');
 let router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
-    return res.render('regrade');
-});
-
+router.get('/', controller.home );
+router.post('/', controller.doRegrade)
 module.exports = router;
