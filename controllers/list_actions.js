@@ -5,15 +5,10 @@ let crypto = require('crypto');
 let actionController = {};
 
 actionController.home = function(req, res) {
-    let url = req.url;
-    if(url.indexOf('?') != -1) {
-        url.substring(0,url.indexOf('?'));
-    }
     return renderList('list',req,res,req.user.inventory)
 }
 actionController.addNew = function (req, res) {
-    return res.render('add_new');
-
+    return res.render('add_new', {title : 'Add to my inventory'});
 }
 actionController.doAddNew = function (req, res) {
     coinInfo = {
@@ -22,6 +17,7 @@ actionController.doAddNew = function (req, res) {
         price : req.sanitize(req.body.purchaseprice),
         denomination : req.sanitize(req.body.denomination),
         grade : req.sanitize(req.body.grade),
+        grader : req.sanitize(req.body.grader),
         comments : req.sanitize(req.body.comments),
     }
     User.findByIdAndUpdate({_id : req.user._id}, {$push: {inventory: coinInfo}}, {safe: true, upsert: true})
@@ -44,18 +40,21 @@ actionController.removeCoins = function (req, res) {
 }
 actionController.editCoin = function (req, res) {
     let coin = req.user.inventory.filter((coin)=> { return coin._id == req.params.coinId  });
-    return res.render('edit', {'coin' : coin[0]});
+    return res.render('edit', {'coin' : coin[0], title: 'Edit my coin'});
 }
 actionController.doEditCoin = function (req, res) {
+    if(!(req.body.grader)) {
+        req.body.grader = "PCGS";
+    }
     let coinInfo = {
         year : req.sanitize(req.body.year),
         certification: req.sanitize(req.body.certification),
         price : req.sanitize(req.body.purchaseprice),
         denomination : req.sanitize(req.body.denomination),
         grade : req.sanitize(req.body.grade),
+        grader : req.sanitize(req.body.grader),
         comments : req.sanitize(req.body.comments)
     }
-
 
     User.update({_id: req.user._id, 'inventory._id' :req.params.coinId }, {$set: {
         'inventory.$.year' : coinInfo.year,
@@ -63,6 +62,7 @@ actionController.doEditCoin = function (req, res) {
         'inventory.$.price' : coinInfo.price,
         'inventory.$.denomination' : coinInfo.denomination,
         'inventory.$.grade' : coinInfo.grade,
+        'inventory.$.grader' : coinInfo.grader,
         'inventory.$.comments' : coinInfo.comments,
         }})
         .then(noAffected=> { return res.json({success:true}) })
@@ -111,7 +111,7 @@ actionController.searchInventory = function (req, res) {
     let searchedItems = [];
     let regex = new RegExp(searchQuery, 'gi');
     req.user.inventory.forEach(function (coin) {
-        if(regex.test(coin.certification) || regex.test(coin.denomination) || regex.test(coin.grade))
+        if(regex.test(coin.certification) || regex.test(coin.denomination) || regex.test(coin.grade) || regex.test(coin.grader))
             searchedItems.push(coin);
     })
     return renderList('search', req, res, searchedItems, searchQuery);
@@ -193,6 +193,7 @@ function renderList(view, req, res, inventory, query) {
     let url = req.url.split('?')[0];
     return res.render(view,
         {
+            title : 'My Inventory',
             url : '/list' + url,
             pageCount: paginationInfo.pageCount,
             currentPage : paginationInfo.currentPage,

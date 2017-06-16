@@ -6,4 +6,5 @@ let router = express.Router();
 router.get('/', controller.home);
 router.get('/buy', controller.buyLedger);
 router.get('/sell', controller.sellLedger);
+router.get('/regrade', controller.regradeLedger);
 module.exports = router;

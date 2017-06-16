@@ -37,9 +37,6 @@ userController.doRegister = function(req, res) {
 
 // Go to login page
 userController.login = function(req, res) {
-    if(req.isAuthenticated())
-        return res.redirect('/');
-    else
         return res.render('login', {status:true});
 };
 

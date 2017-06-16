@@ -29,7 +29,7 @@
                             <tr>
                                 <td><%= i+1 %></td>
                                 <td><%= coinIds[i].certification %></td>
-                                <td><%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
+                                <td><%= coinIds[i].grader %> - <%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
                                 <td><input type="number" class="form-control saleinput" name="<%= coinIds[i]._id %>"></td>
                             </tr>
                         <% } %>
@@ -50,6 +50,22 @@
 <% include partials/scripts.ejs %>
 <script>
     $(document).ready(function () {
+
+        let input = $('input'),
+            signup = $('#sellcoinbutton');
+        signup.attr('disabled', true);
+
+        input.keyup(function() {
+            let trigger = false;
+            input.each(function() {
+                if (!$(this).val()) {
+                    trigger = true;
+                }
+            });
+            trigger ? signup.attr('disabled', true) : signup.removeAttr('disabled');
+        });111111111
+
+
         $('#sellcoinbutton').click(function () {
             let form = $('<form />', {
                 action: '/list/sell/invoice',

@@ -59,7 +59,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next)=>{
     if( req.url.match(/^\/list/) ||
         req.url.match(/^\/ledger/) ||
-        req.url.match(/^\/regrade/)) {
+        req.url.match(/^\/regrade/) ||
+        req.url.match(/^\/profile/)) {
         if(!req.isAuthenticated()) return res.redirect('/login')
     }
     next();

@@ -54,7 +54,7 @@
                         <input type="radio" class="form-control" id="sell" name="choice">
                     </div>
                 </div>
-                <div class="list">
+                <div class="container">
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -78,7 +78,7 @@
                                     <% } else { %>
                                         <td class="text-danger"><strong>BUY</strong></td>
                                     <% } %>
-                                    <td><%= coins[i].grade %> - <%= coins[i].denomination %></td>
+                                    <td><%= coins[i].grader %> - <%= coins[i].grade %> - <%= coins[i].denomination %></td>
                                     <td><%= coins[i].certification %></td>
                                     <% if(!coins[i].soldcoin || coins[i].price < 0) { %>
                                         <td class="text-danger"> $ <%= coins[i].price %></td>
@@ -114,6 +114,8 @@
             $('#buy').prop('checked', true);
         else if(location.href.indexOf("/sell") !== -1)
             $('#sell').prop('checked', true);
+        else if(location.href.indexOf("/regrade") !== -1)
+            $('#regrade').prop('checked', true);
         else
             $('#all').prop('checked', true);
     }
@@ -127,7 +129,10 @@
         });
         $('#sell').click(function () {
             location.href = "/ledger/sell";
-        })
+        });
+        $('#regrade').click(function () {
+            location.href = "/ledger/regrade";
+        });
 
         $('.selectpicker').change(function () {
             location.href = location.protocol + '//' + location.host + location.pathname + '?items=' + $(this).val();

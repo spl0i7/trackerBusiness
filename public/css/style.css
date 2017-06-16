@@ -139,9 +139,6 @@ nav  {
     display: block;
 }
 
-
-
-
 /* Misc */
 
 #loading {
@@ -268,7 +265,7 @@ form {
     font-size: 1.0em;
 }
 
-.list-action-1 li a:focus, .list-action-2 li a:focus  {
+.list-action-1 li a:focus, .list-action-2 li a:focus, .navbar-utils li a:focus , .dropdown-navbar:hover{
     background: transparent !important;
 }
 

@@ -38,6 +38,10 @@
                     <input type="password" class="form-control" id="pwd" name="password">
                 </div>
                 <div class="form-group">
+                    <label for="confirmpassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmpassword">
+                </div>
+                <div class="form-group">
                     <div class="g-recaptcha" data-sitekey="6LcPbyUUAAAAAN9EQl2ROqwK9mDyjp_9i1ORZ7Ly"></div>
                 </div>
                 <% if(typeof message !== 'undefined') { %>
@@ -56,6 +60,17 @@
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
     $(document).ready(function () {
+        $('#confirmpassword').css('border-color', 'red');
+        $('#confirmpassword').keyup(function () {
+            if($(this).val() != '' && $('#pwd').val() == $(this).val()) {
+                $(this).css('border-color', 'green');
+            }
+            else {
+                $(this).css('border-color', 'red');
+            }
+        });
+
+
         let input = $('input'),
             signup = $('#signup');
         signup.attr('disabled', true);

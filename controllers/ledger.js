@@ -39,6 +39,15 @@ ledgerController.sellLedger = function (req, res) {
     });
     return renderList('ledger', req, res, coins)
 }
+ledgerController.regradeLedger = function (req, res) {
+    let coins = JSON.parse(JSON.stringify(req.user.regrade));
+    coins.forEach((coin, index)=> {
+        coin.soldcoin = true
+        coin.index = index+1;
+    });
+    return renderList('ledger', req, res, coins)
+}
+
 
 function renderList(view, req, res, coins) {
     let paginationInfo = pagination(req, coins);
@@ -46,6 +55,7 @@ function renderList(view, req, res, coins) {
 
     return res.render(view,
         {
+            title : 'My Ledger',
             url : '/ledger' + url,
             pageCount: paginationInfo.pageCount,
             currentPage : paginationInfo.currentPage,

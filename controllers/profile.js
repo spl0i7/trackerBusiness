@@ -1,19 +1,31 @@
 let passport = require("passport");
 let User = require("../models/User");
+let passportLocalMongoose = require('passport-local-mongoose');
 
 let profileController = {};
 
 profileController.home = function (req, res) {
-    if(!req.isAuthenticated()) return res.redirect('/login');
     return res.render('profile', {
-        firstname : req.user.firstname ,
-        lastname : req.user.lastname,
-        email : req.user.email
+        title: 'Change Password'
     });
 }
 
 profileController.doUpdate = function (req, res) {
-
+    let newPassword = req.sanitize(req.body.newpassword);
+    console.log(newPassword);
+    User.findByUsername(req.user.username)
+        .then(function(sanitizedUser){
+        if (sanitizedUser){
+            sanitizedUser.setPassword(newPassword, function(){
+                sanitizedUser.save();
+                return res.redirect('/');
+            });
+        } else {
+            res.redirect('/profile');
+        }
+    },function(err){
+        console.error(err);
+    })
 }
 
 module.exports = profileController;

@@ -9,8 +9,8 @@
         <div class="card-large center">
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-1">
-                    <li><p class="nav-desc"><span class="glyphicon glyphicon-plus"></span>Add</p></li>
-                    <li><p class="nav-desc">Here You will add new item to your inventory</p></li>
+                    <li><p class="nav-desc"><span class="glyphicon glyphicon-edit"></span>Edit</p></li>
+                    <li><p class="nav-desc">Here You will edit your items</p></li>
                 </ul>
             </nav>
             <div class="container">
@@ -21,6 +21,9 @@
                             <option>PCGS</option>
                             <option>Other</option>
                         </select>
+                    </div>
+                    <div class="form-group" id="gradercontainer">
+                        <input type="text" class="form-control" id="graderinput" placeholder="Grader" name="grader"/>
                     </div>
                     <div class="form-group">
                         <label for="certification">Certification</label>
@@ -71,6 +74,21 @@
         $('#denomination').val ('<%= coin.denomination %>');
         $('#comments').val ('<%= coin.comments %>');
 
+        let grader = '<%= coin.grader %>';
+        if(grader === 'PCGS') {
+            $('#getdata').show();
+            $('#grader').val('PCGS');
+            $('#gradercontainer').hide();
+            $('#graderinput').val('');
+        }
+        else {
+            $('#getdata').hide();
+            $('#grader').val('Other');
+            $('#gradercontainer').show();
+            $('#graderinput').show().val(grader);
+
+        }
+
         $('#savebutton').click(function () {
             $.ajax({
                 type: "PUT",
@@ -86,9 +104,12 @@
             switch ($(this).val()) {
                 case "PCGS" :
                     $('#getdata').show();
+                    $('#gradercontainer').hide();
+                    $('#graderinput').val('');
                     break;
                 default :
                     $('#getdata').hide();
+                    $('#gradercontainer').show();
                     break;
             }
         });

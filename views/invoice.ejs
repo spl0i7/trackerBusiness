@@ -33,7 +33,7 @@
                         <tr>
                             <td><%= i+1 %></td>
                             <td><%= coinIds[i].certification %></td>
-                            <td><%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
+                            <td><%= coinIds[i].grader %> - <%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
                             <td>$ <%= coinIds[i].price %></td>
                         </tr>
                     <% total += Number(coinIds[i].price) %>

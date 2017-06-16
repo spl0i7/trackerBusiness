@@ -36,6 +36,7 @@ function renderList(view, req, res, coins) {
 
     return res.render(view,
         {
+            title: 'My Regrade',
             url : '/regrade' + url,
             pageCount: paginationInfo.pageCount,
             currentPage : paginationInfo.currentPage,

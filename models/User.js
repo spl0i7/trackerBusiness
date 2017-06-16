@@ -17,6 +17,7 @@ let userSchema = mongoose.Schema(
                         price           : Number,
                         denomination    : String,
                         grade           : String,
+                        grader          : {type:String, default: 'PCGS'},
                         comments        : {type: String, default : ''},
                 }],
                 soldcoins   : [{
@@ -26,6 +27,7 @@ let userSchema = mongoose.Schema(
                     price           : Number,
                     denomination    : String,
                     grade           : String,
+                    grader          : String,
                     comments        : {type: String, default : ''},
                 }],
                 regrade :[{
@@ -35,6 +37,7 @@ let userSchema = mongoose.Schema(
                     price           : Number,
                     denomination    : String,
                     grade           : String,
+                    grader          : String,
                     comments        : {type: String, default : ''},
                 }]
         }
