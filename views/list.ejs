@@ -207,10 +207,21 @@
                 });
             }
         });
-        $('#searchbutton').click(function () {
+
+        function doSearch() {
             let searchQuery = $('#searchbox').val();
-            location.href = location.protocol + '//' + location.host + location.pathname + '/search/' + searchQuery;
-        })
+            if(searchQuery.length > 0 ) {
+                location.href = location.protocol + '//' + location.host + location.pathname + '/search/' + searchQuery;
+            }
+        }
+
+        $('#searchbutton').click(function () {
+            doSearch();
+        });
+        $('#searchbox').keypress(function(e) {
+            if(e.which == 13) doSearch();
+        });
+
         $('#searchicon').click(function () {
             $(this).hide();
             $('.searchtools').attr('style', 'display: block !important');

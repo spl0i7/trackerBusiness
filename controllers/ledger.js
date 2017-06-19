@@ -6,23 +6,21 @@ let ledgerController = {};
 ledgerController.home = function (req, res) {
     let coins = [];
     let current = null;
-    for(let i = 0 , j = 0, k = 0 ; i < req.user.inventory.length || j < req.user.soldcoins.length || k < req.user.regrade.length; ++i, ++j, ++k) {
+    for(let i = 0 ; i < req.user.inventory.length ; ++i) {
 
-        if (i < req.user.inventory.length) {
-            current = JSON.parse(JSON.stringify(req.user.inventory[i]));
-            current.soldcoin = false;
-            coins.push(current);
-        }
-        if (j < req.user.soldcoins.length) {
-            current = JSON.parse(JSON.stringify(req.user.soldcoins[j]));
-            current.soldcoin = true;
-            coins.push(current);
-        }
-        if( k < req.user.regrade.length) {
-            current = JSON.parse(JSON.stringify(req.user.regrade[k]));
-            coins.push(current);
-        }
+        current = JSON.parse(JSON.stringify(req.user.inventory[i]));
+        current.soldcoin = false;
+        coins.push(current);
+    }
 
+    for(let i = 0 ; i < req.user.soldcoins.length; ++i) {
+        current = JSON.parse(JSON.stringify(req.user.soldcoins[i]));
+        current.soldcoin = true;
+        coins.push(current);
+    }
+    for(let i = 0 ; i < req.user.regrade.length; ++i){
+        current = JSON.parse(JSON.stringify(req.user.regrade[i]));
+        coins.push(current);
     }
     coins.forEach((coin,index)=> coin.index = index+1);
     return renderList('ledger', req, res, coins)

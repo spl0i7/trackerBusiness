@@ -105,7 +105,7 @@ actionController.sortInventory = function (req, res) {
 actionController.searchInventory = function (req, res) {
     let searchQuery = req.sanitize(req.params.query);
     let searchedItems = [];
-    let regex = new RegExp(searchQuery, 'gi');
+    let regex = new RegExp(escapeRegExp(searchQuery), 'gi');
     req.user.inventory.forEach(function (coin) {
         if(regex.test(coin.certification) || regex.test(coin.denomination) || regex.test(coin.grade) || regex.test(coin.grader))
             searchedItems.push(coin);
@@ -183,6 +183,9 @@ actionController.doRegrade = function (req, res) {
             console.log(err)
             res.json({success:false})
         });
+}
+function escapeRegExp(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 function renderList(view, req, res, inventory, query) {
     let paginationInfo = pagination(req, inventory);
