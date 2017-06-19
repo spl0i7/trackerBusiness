@@ -35,16 +35,16 @@
                             <td><%= i+1 %></td>
                             <td><%= coinIds[i].certification %></td>
                             <td><%= coinIds[i].grader %> - <%= coinIds[i].grade %> - <%= coinIds[i].denomination %></td>
-                            <td>$ <%= coinIds[i].price %></td>
+                            <td>$ <%= parseFloat(coinIds[i].price).toFixed(2) %></td>
                         </tr>
-                    <% total += Number(coinIds[i].price) %>
+                    <% total += parseFloat(coinIds[i].price) %>
                         <% } %>
                     <% } %>
                     <tr>
                         <td>-</td>
                         <td>-</td>
                         <td><h4>Total = </h4></td>
-                        <td><h4>$ <%= total %></h4></td>
+                        <td><h4>$ <%= total.toFixed(2) %></h4></td>
                     </tr>
                     </tbody>
                 </table>
