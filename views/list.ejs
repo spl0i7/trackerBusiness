@@ -72,7 +72,7 @@
                                 <th scope="row"><input type="checkbox" name="<%= inventory[i]._id %>" id = "<%= i %>" /> </th>
                                 <td><%= inventory[i].grader %> - <%= inventory[i].year %> - <%= inventory[i].denomination %> - <%= inventory[i].grade %></td>
                                 <td><%= inventory[i].certification%></td>
-                                <td>$ <%= inventory[i].price.toFixed(2)%></td>
+                                <td>$ <%= parseFloat(inventory[i].price).toFixed(2)%></td>
                             </tr>
                             <% }%>
                     <% }%>
