@@ -75,31 +75,27 @@ actionController.sortInventory = function (req, res) {
     let inventory = JSON.parse(JSON.stringify(req.user.inventory));
     switch (req.params.type) {
         case "price":
-            console.log()
             inventory.sort(function (a, b) {
                 if(req.params.order === "asc")
-                    return a.price > b.price;
+                    return parseFloat(a.price) - parseFloat(b.price);
                 else
-                    return a.price < b.price;
+                    return -(parseFloat(a.price) - parseFloat(b.price));
             });
-
             break;
         case "description" :
-
             inventory.sort(function (a, b) {
                 if(req.params.order === "asc")
-                    return a.denomination  > b.denomination;
+                    return parseInt(a.year) - parseInt(b.year);
                 else
-                    return a.denomination  < b.denomination;
+                    return parseInt(b.year) - parseInt(a.year);
             })
             break;
         case "certification" :
-
             inventory.sort(function (a, b) {
                 if(req.params.order === "asc")
-                    return a.certification > b.certification;
+                    return a.certification.localeCompare(b.certification);
                 else
-                    return a.certification < b.certification;
+                    return b.certification.localeCompare(a.certification);
             });
             break;
     }
@@ -139,7 +135,7 @@ actionController.sellCoinPage = function (req, res) {
             }
         }
         if(saleCoins.url === req.params.urlId) {
-            return res.render('sell', {coinIds : coinIds});
+            return res.render('sell', {coinIds : coinIds, title : 'Sell coins'});
         }
     }
     return res.redirect('/list');
