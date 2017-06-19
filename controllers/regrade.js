@@ -16,7 +16,6 @@ regradeController.doRegrade = function (req, res) {
 
     regradeCoin.grade = selectedCoin.grade;
     regradeCoin.certification = selectedCoin.certification;
-
     User.findOneAndUpdate({_id: req.user._id}, {$pull: {regrade: {_id: regradeCoin.id }}})
         .then(()=> {
             return User.findOneAndUpdate({_id: req.user._id}, {$push: {inventory: regradeCoin}})

@@ -23,6 +23,9 @@ ledgerController.home = function (req, res) {
         coins.push(current);
     }
     coins.forEach((coin,index)=> coin.index = index+1);
+    coins.sort((function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+    }));
     return renderList('ledger', req, res, coins)
 }
 ledgerController.buyLedger = function (req, res) {
