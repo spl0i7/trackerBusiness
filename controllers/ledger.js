@@ -57,7 +57,7 @@ ledgerController.regradeLedger = function (req, res) {
 
 function renderList(view, req, res, coins) {
     let paginationInfo = pagination(req, coins);
-    let url = req.url.split('?')[0];
+    let url = req.url;
 
     return res.render(view,
         {

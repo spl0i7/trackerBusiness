@@ -189,6 +189,7 @@ function escapeRegExp(text) {
 }
 function renderList(view, req, res, inventory, query) {
     let paginationInfo = pagination(req, inventory);
+    let url = req.url;
     return res.render(view,
         {
             title : 'My Inventory',
