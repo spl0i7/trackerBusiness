@@ -13,7 +13,6 @@ module.exports = function (req, inventory) {
     let currentPage = 1;
     let coinArrays = [];
 
-
     while(coins.length > 0) {
         coinArrays.push(coins.splice(0,pageSize));
     }

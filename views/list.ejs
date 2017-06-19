@@ -45,6 +45,8 @@
                     <li><div class="item-perpage">
                             <select class="selectpicker" data-width="65px">
                                 <option>25</option>
+                                <option>50</option>
+                                <option>100</option>
                             </select>
                         </div>
                     </li>
@@ -82,11 +84,11 @@
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-2">
                     <% if(currentPage > 1 ) { %>
-                    <% let previousPage = url + '?page=' + (Number(currentPage) -1) %>
+                    <% let previousPage = addUrlParam(url, 'page', Number(currentPage) -1 ) %>
                     <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
                     <% } %>
                     <% if (pageCount > 1 && currentPage != pageCount) { %>
-                    <% let nextPage = url + '?page=' + (Number(currentPage) +1)%>
+                    <% let nextPage = addUrlParam(url, 'page', Number(currentPage) + 1 )%>
                     <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
                     <% } %>
                 </ul>

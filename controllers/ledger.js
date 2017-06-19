@@ -22,10 +22,11 @@ ledgerController.home = function (req, res) {
         current = JSON.parse(JSON.stringify(req.user.regrade[i]));
         coins.push(current);
     }
-    coins.forEach((coin,index)=> coin.index = index+1);
     coins.sort((function (a, b) {
         return new Date(a.date) - new Date(b.date);
     }));
+    coins.forEach((coin,index)=> coin.index = index+1);
+
     return renderList('ledger', req, res, coins)
 }
 ledgerController.buyLedger = function (req, res) {
