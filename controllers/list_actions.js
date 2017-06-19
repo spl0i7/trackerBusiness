@@ -158,7 +158,7 @@ actionController.doSellCoin = function (req, res) {
     if(!customerName) customerName = "";
     User.findOneAndUpdate({_id: req.user._id}, {$pull: {inventory: {_id : {'$in' : coinIds}}}})
         .then(() => { return User.findByIdAndUpdate({_id: req.user._id}, {$push: {soldcoins: {$each:coins}}}, {safe: true, upsert: true})})
-        .then(()=>{ return res.render('invoice', {coinIds : coins, customerName : customerName});})
+        .then(()=>{ return res.render('invoice', {coinIds : coins, customerName : customerName, title : 'Your invoice'});})
         .catch(()=> { return res.json({success:false});});
 }
 actionController.doRegrade = function (req, res) {

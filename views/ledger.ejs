@@ -73,7 +73,9 @@
                                     <td><%= coins[i].index %></td>
                                     <% let date = new Date(coins[i].date)%>
                                     <td><%= date.getMonth() + 1 %>/<%= date.getDate() %>/<%= date.getFullYear() %></td>
-                                    <% if (coins[i].soldcoin){%>
+                                    <% if( typeof coins[i].soldcoin != "boolean") { %>
+                                        <td class="text-info">REGRADE</td>
+                                    <% } else if (coins[i].soldcoin){%>
                                         <td class="text-success"><strong>SELL</strong></td>
                                     <% } else { %>
                                         <td class="text-danger"><strong>BUY</strong></td>
