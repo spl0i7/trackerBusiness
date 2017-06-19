@@ -1,6 +1,6 @@
-#trackerBusiness website
+# trackerBusiness website
 
-###How to install
+### How to install
 
 1) Clone this repository and cd into directory.
 
@@ -31,6 +31,7 @@ var port = normalizePort(process.env.PORT || '80');
 `
 
 this will change default port from 3000 to 80 (which is normally the case for most website).
+
 6) Start the website by
 
 `
