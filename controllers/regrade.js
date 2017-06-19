@@ -31,8 +31,6 @@ regradeController.doRegrade = function (req, res) {
 
 function renderList(view, req, res, coins) {
     let paginationInfo = pagination(req, coins);
-    let url = req.url.split('?')[0];
-
     return res.render(view,
         {
             title: 'My Regrade',
