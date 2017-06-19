@@ -97,11 +97,11 @@
             <nav class="navbar ">
                 <ul class="nav navbar-nav list-action-2">
                     <% if(currentPage > 1 ) { %>
-                    <% let previousPage = url + '?page=' + (Number(currentPage) -1) %>
+                    <% let previousPage = addUrlParam(url, 'page', Number(currentPage) -1 ) %>
                     <li><a href="<%= previousPage %>"><span class="glyphicon glyphicon-chevron-left"></span> </a> </li>
                     <% } %>
                     <% if (pageCount > 1 && currentPage != pageCount) { %>
-                    <% let nextPage = url + '?page=' + (Number(currentPage) +1)%>
+                    <% let nextPage = addUrlParam(url, 'page', Number(currentPage) + 1 )%>
                     <li><a href="<%= nextPage %>"><span class="glyphicon glyphicon-chevron-right"></span> </a> </li>
                     <% } %>
                 </ul>
